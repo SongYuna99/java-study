@@ -8,12 +8,22 @@ public static int countOfGoods = 0;
 	private int countStock;
 	private int countSold;
 	
+	// constructor : 생성자의 오버로딩
 	public Goods() {
 		// 내부에서는 클래스 이름 생략 가능
 		// Goods.countOfGoods++;
 		countOfGoods++;
 	}
 	
+	public Goods(String name, int price, int countStock, int countSold) {
+		this.name = name;
+		this.price = price;
+		this.countStock = countStock;
+		this.countSold = countSold;
+		countOfGoods++;
+	}
+	
+	// getter-setter
 	public String getName() {
 		return name;
 	}

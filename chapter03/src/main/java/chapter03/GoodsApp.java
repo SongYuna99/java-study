@@ -25,7 +25,9 @@ public class GoodsApp {
 		int discountPrice = camera.calcDiscountPrice(0.5);
 		System.out.println(discountPrice);
 		
-		
+		// 생성자 사용
+		Goods tv = new Goods("TV", 4000000, 10, 20);
+		tv.showInfo();
 	}
 
 }
