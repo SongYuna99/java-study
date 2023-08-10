@@ -27,9 +27,9 @@ public class TV {
 
 	public void channel(int channel) {
 		if (channel > 255) {
-			channel = 255;
-		} else if (channel < 1) {
 			channel = 1;
+		} else if (channel < 1) {
+			channel = 255;
 		}
 		this.channel = channel;
 	}
@@ -44,9 +44,9 @@ public class TV {
 
 	public void volume(int volume) {
 		if (volume > 100) {
-			volume = 100;
+			volume = 0;
 		} else if (volume < 1) {
-			volume = 1;
+			volume = 100;
 		}
 		this.volume = volume;
 	}
