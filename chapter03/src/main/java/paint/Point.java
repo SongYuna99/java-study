@@ -1,10 +1,15 @@
 package paint;
 
 public class Point {
-	private int x;
-	private int y;
+	// 자식 메소드에서 사용하기 위해 protected
+	protected int x;
+	protected int y;
 
 	// constructor
+	public Point() {
+
+	}
+
 	public Point(int x, int y) {
 		this.x = x;
 		this.y = y;
