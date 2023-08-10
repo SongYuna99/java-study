@@ -1,4 +1,6 @@
-package paint;
+package com.poscodx.paint.point;
+
+import com.poscodx.paint.i.Drawable;
 
 public class Point implements Drawable {
 	// 자식 메소드에서 사용하기 위해 protected

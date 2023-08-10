@@ -1,6 +1,6 @@
-package prob2;
+package prob1;
 
-public class Prob2 {
+public class PrinterTest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

@@ -1,13 +1,14 @@
-package paint;
+package com.poscodx.paint.shape;
 
-public class Circle extends Shape{
+public class Triangle extends Shape {
 	private int x1, y1;
 	private int x2, y2;
+	private int x3, y3;
 
 	// method
 	@Override
 	public void draw() {
-		System.out.println("원을 그렸습니다.");
+		System.out.println("삼각형을 그렸습니다.");
 	}
 
 	// getter - setter
@@ -41,5 +42,21 @@ public class Circle extends Shape{
 
 	public void setY2(int y2) {
 		this.y2 = y2;
+	}
+
+	public int getX3() {
+		return x3;
+	}
+
+	public void setX3(int x3) {
+		this.x3 = x3;
+	}
+
+	public int getY3() {
+		return y3;
+	}
+
+	public void setY3(int y3) {
+		this.y3 = y3;
 	}
 }
