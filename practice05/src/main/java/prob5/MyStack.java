@@ -9,9 +9,7 @@ public class MyStack {
 
 	public void push(String string) {
 		for (int i = 0; i < buffer.length; i++) {
-			if (buffer[i] == null) {
-				buffer[i] = string;
-			}
+			
 		}
 	}
 
