@@ -1,15 +1,9 @@
 package prob5;
 
-import java.util.EmptyStackException;
-
-public class MyStackException extends EmptyStackException {
+public class MyStackException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	@Override
-	public String toString() throws EmptyStackException {
-		return "Prob5.MyStackException: stack is empty";
-	}
-
-	public MyStackException() {
+	public MyStackException(String message) {
+		super(message);
 	}
 }
