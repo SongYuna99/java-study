@@ -1,23 +1,23 @@
 package prob5;
 
-public class MyStack {
-	private String[] buffer;
+public class MyStack03<T> {
+	private T[] buffer;
 	private int top;
 
-	public MyStack(int num) {
-		this.buffer = new String[num];
+	public MyStack03(int capacity) {
+		this.buffer = (T[]) new Object[capacity];
 		this.top = 0;
 	}
 
-	public void push(String string) throws MyStackException {
+	public void push(T t) throws MyStackException {
 		if (top > (buffer.length - 1)) {
 			resize();
 		}
-		buffer[top++] = string;
+		buffer[top++] = t;
 	}
 
 	public void resize() {
-		String[] newBuffer = new String[buffer.length * 2];
+		T[] newBuffer = (T[]) new Object[buffer.length * 2];
 
 		for (int i = 0; i < top; i++) {
 			newBuffer[i] = buffer[i];
@@ -32,12 +32,11 @@ public class MyStack {
 		return true;
 	}
 
-	public String pop() throws MyStackException {
-		top--;
-		if (top < 0) {
+	public T pop() throws MyStackException {
+		if (isEmpty()) {
 			throw new MyStackException();
 		}
-		String s = buffer[top];
+		T s = buffer[--top];
 		buffer[top] = null;
 		return s;
 	}
