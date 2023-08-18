@@ -1,11 +1,11 @@
 package thread;
 
-public class DigitalThread extends Thread {
+public class AlphabetThread extends Thread {
 
 	@Override
 	public void run() {
-		for (int i = 1; i < 11; i++) {
-			System.out.print(i);
+		for (char c = 'a'; c <= 'z'; c++) {
+			System.out.print(c);
 
 			try {
 				Thread.sleep(1000);
