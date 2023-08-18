@@ -27,6 +27,7 @@ public class NSLookup {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		scanner.close();
 	}
 
 }
