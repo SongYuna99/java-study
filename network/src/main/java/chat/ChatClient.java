@@ -32,8 +32,17 @@ public class ChatClient {
 			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
 
 			// 5. join 프로토콜
-			System.out.print("닉네임>>");
-			String nickname = scanner.nextLine();
+			String nickname = null;
+			while (true) {
+				System.out.print("닉네임>>");
+				nickname = scanner.nextLine();
+
+				if (nickname.isBlank()) {
+					System.out.println("닉네임을 입력해주세요.");
+				} else {
+					break;
+				}
+			}
 			printWriter.println("join:" + nickname);
 
 			// 6. ChatClientReceiveThread 시작
@@ -43,11 +52,18 @@ public class ChatClient {
 			while (true) {
 				System.out.print(">>");
 				String input = scanner.nextLine();
-
-				if ("quit".equals(input.toLowerCase()) == true) {
+				if (input.isBlank() || "\n".equals(input)) {
+					System.out.println("\b\b");
+				} else if ("quit".equals(input.toLowerCase()) == true) {
 					// 8. quit 프로토콜 처리
 					doQuit(nickname, printWriter);
 					break;
+				} else if ("/help".equals(input.toLowerCase()) == true) {
+					doHelp();
+				} else if (input.startsWith("/ban ")) {
+					String[] tokens = input.split(" ");
+					// ban
+					doBan(tokens[1], printWriter);
 				} else {
 					// 9. 메시지 처리
 					doMessage(input, printWriter);
@@ -69,6 +85,19 @@ public class ChatClient {
 				log("Error:" + ex);
 			}
 		}
+
+	}
+
+	private static void doHelp() {
+		System.out.println("현재 방 정보");
+		System.out.println("방장 : ");
+		System.out.println("명령어 모음");
+		System.out.println("1. help");
+		System.out.println("2. ban 대상");
+		System.out.println("2. r 대상");
+	}
+
+	private static void doBan(String bannedNickname, Writer writer) {
 
 	}
 

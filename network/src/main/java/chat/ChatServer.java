@@ -15,7 +15,6 @@ public class ChatServer {
 	public static void main(String[] args) {
 		ServerSocket serverSocket = null;
 		List<Writer> listWriters;
-
 		try {
 			// 1. 서버 소켓 생성
 			serverSocket = new ServerSocket();

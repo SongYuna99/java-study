@@ -104,6 +104,7 @@ public class ChatServerThread extends Thread {
 				PrintWriter printWriter = (PrintWriter) writer;
 				printWriter.println(data);
 			}
+
 		}
 	}
 
