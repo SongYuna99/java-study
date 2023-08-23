@@ -21,7 +21,7 @@ public class ChatWindow {
 	private Button buttonSend;
 	private TextField textField;
 	private TextArea textArea;
-	
+
 	private String name;
 	private String message;
 
@@ -31,6 +31,9 @@ public class ChatWindow {
 		buttonSend = new Button("Send");
 		textField = new TextField();
 		textArea = new TextArea(30, 80);
+
+		this.name = name;
+		message = null;
 	}
 
 	public void show() {
@@ -80,10 +83,10 @@ public class ChatWindow {
 
 		// ChatClientThread 생성하고 실행
 	}
-	
+
 	private void finish() {
 		// quit 프로토콜 구현
-		// exit java(JVM) 
+		// exit java(JVM)
 		System.exit(0);
 	}
 
