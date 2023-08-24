@@ -11,90 +11,67 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class ChatServerThread extends Thread {
-	private String nickname;
 	Socket socket;
-	static List<Writer> listWriters;
+	List<Writer> listWriters;
+	String name;
 
 	public ChatServerThread(Socket socket, List<Writer> listWriters) {
 		this.socket = socket;
-		ChatServerThread.listWriters = listWriters;
+		this.listWriters = listWriters;
 	}
 
 	@Override
 	public void run() {
 		try {
-			// 1. Remote Host Information
 			InetSocketAddress inetSocketAddress = (InetSocketAddress) socket.getRemoteSocketAddress();
-			log("Connected from " + inetSocketAddress.getAddress().getHostAddress() + ":"
+			System.out.println("[SERVER_THREAD] Connected from " + inetSocketAddress.getAddress().getHostAddress() + ":"
 					+ inetSocketAddress.getPort());
 
-			// 2. 스트림 얻기
 			BufferedReader br = new BufferedReader(
 					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 			PrintWriter printWriter = new PrintWriter(
 					new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8), true);
 
-			// 3. 요청 처리
 			while (true) {
 				String line = br.readLine();
 				if (line == null) {
-					ChatServer.log("클라이언트로 부터 연결 끊김");
-					doQuit(printWriter);
+					System.out.println("[SERVER_THREAD] 클라이언트로부터 연결 끊김");
 					break;
 				}
 
-				// 4. 프로토콜 분석
 				String[] tokens = line.split(":");
-
 				if ("join".equals(tokens[0])) {
-					doJoin(tokens[1], printWriter);
+					doJoin(printWriter, tokens[1]);
+				} else if ("talk".equals(tokens[0])) {
+					doTalk(tokens[1], tokens[2], tokens[3], printWriter);
 				} else if ("message".equals(tokens[0])) {
-					doMessage(tokens[1]);
+					doMessage(tokens[1], tokens[2]);
 				} else if ("quit".equals(tokens[0])) {
 					doQuit(printWriter);
 				} else {
-					ChatServer.log("에러:알수 없는 요청(" + tokens[0] + ")");
+					System.out.println("[SERVER_THREAD] 알수없는 요청(" + tokens[1] + ")");
 				}
-
 			}
-		} catch (Exception e) {
-			System.out.println("Error : " + e);
-		}
 
+		} catch (Exception e) {
+			System.out.println("[SERVER_THREAD] ERROR : " + e);
+		}
 	}
 
 	private void doQuit(Writer writer) {
 		removeWriter(writer);
 
-		String data = nickname + "님이 퇴장 하였습니다.";
+		String data = name + "님이 퇴장하였습니다.";
 		broadcast(data);
 	}
 
 	private void removeWriter(Writer writer) {
 		synchronized (listWriters) {
+			if (listWriters.indexOf(writer) == 0) {
+				delegateManager(listWriters.get(1));
+			}
+
 			listWriters.remove(writer);
-		}
-	}
-
-	private void doMessage(String message) {
-		String data = nickname + " : " + message;
-		broadcast(data);
-	}
-
-	private void doJoin(String nickname, Writer writer) {
-		this.nickname = nickname;
-
-		String data = nickname + "님이 참여하였습니다.";
-		broadcast(data);
-
-		addWriter(writer);
-
-		((PrintWriter) writer).println("입장하였습니다. 즐거운 채팅 되세요.");
-	}
-
-	private void addWriter(Writer writer) {
-		synchronized (listWriters) {
-			listWriters.add(writer);
 		}
 	}
 
@@ -104,12 +81,53 @@ public class ChatServerThread extends Thread {
 				PrintWriter printWriter = (PrintWriter) writer;
 				printWriter.println(data);
 			}
-
 		}
 	}
 
-	public static void log(String message) {
-		System.out.println("[HttpServer#" + Thread.currentThread().getId() + "] " + message);
+	private void delegateManager(Writer writer) {
+		PrintWriter printWriter = (PrintWriter) writer;
+		printWriter.println("name:" + name + "(방장)");
+		broadcast(name + "님이 방장이 되었습니다.");
+	}
+
+	private void doMessage(String sender, String message) {
+		String data = sender + " : " + message;
+		broadcast(data);
+	}
+
+	private void doTalk(String receiver, String sender, String message, Writer writer) {
+		String data = null;
+
+		if (name.equals(receiver)) {
+			data = sender + "님의 귓속말 : " + message;
+		} else if (name.equals(sender)) {
+			data = receiver + "님에게 귓속말 : " + message;
+		}
+
+		if (!data.isBlank()) {
+			PrintWriter printWriter = (PrintWriter) writer;
+			printWriter.println(data);
+		}
+	}
+
+	private void doJoin(Writer writer, String name) {
+		this.name = name;
+		broadcast(name + "님이 참여하였습니다.");
+
+		addWriter(writer);
+
+		PrintWriter printWriter = (PrintWriter) writer;
+		printWriter.print("name:" + name);
+		printWriter.println("broadcast:입장하였습니다. 즐거운 채팅되세요.");
+	}
+
+	private void addWriter(Writer writer) {
+		synchronized (listWriters) {
+			if (listWriters.size() == 0) {
+				listWriters.add(writer);
+				delegateManager(writer);
+			}
+		}
 	}
 
 }
