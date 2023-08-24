@@ -85,7 +85,7 @@ public class ChatWindow {
 	}
 
 	private void finish() {
-		// quit 프로토콜 구현
+		// quit 프로토콜 구현y
 		// exit java(JVM)
 		System.exit(0);
 	}
