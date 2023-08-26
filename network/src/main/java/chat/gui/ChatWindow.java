@@ -119,24 +119,21 @@ public class ChatWindow {
 		String message = textField.getText();
 
 		if (!message.isBlank()) {
-			String[] tokens = message.split(":");
-			String data = null;
-			if (message.startsWith("/r ")) {
-				data = "talk:" + tokens[1] + ":" + name + ":" + tokens[2];
-			} else {
-				data = "message:" + name + message;
-			}
+			String data = "message:" + name + ":" + message;
 			printWriter.println(data);
 			textField.setText("");
-
-			// ChatClientThread 에서 서버로 부터 받은 메세지가 있다고 치고
-			updateTextArea(name + ":" + message);
 		}
 	}
 
 	private void updateTextArea(String message) {
 		textArea.append(message);
 		textArea.append("\n");
+
+	}
+
+	private void setLeader(String name) {
+		this.name += name;
+		printWriter.println("leader:" + this.name);
 	}
 
 	private class ChatClientThread extends Thread {
@@ -153,12 +150,14 @@ public class ChatWindow {
 			try {
 				while (true) {
 					String line = br.readLine();
-					if (line == null) {
-						System.out.println("[Client_Thread] 서버로부터 연결 끊김");
-						break;
+					if (!line.isBlank()) {
+						if (line.startsWith("leader:")) {
+							setLeader("(방장)");
+						} else {
+							updateTextArea(line);
+						}
 					}
 
-					updateTextArea(line);
 				}
 			} catch (Exception e) {
 				System.out.println("[Client_Thread] Error : " + e);
